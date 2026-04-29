@@ -23,18 +23,37 @@ The `15.2 t/s` appears at the end, only when:
 | `run_agent.py` | Track API duration + completion tokens, compute t/s |
 | `cli.py` | Display t/s in status bar text and rich fragments |
 
+---
+
 ## Installation
 
-### Step 1: Backup Original Files
+### Option 1: Agent Auto-Modification (Recommended)
+
+Give this article to your Hermes agent and let it modify for you:
+
+**Prompt:**
+> Read https://github.com/maxxqf-ai/hermes-status-bar-tps and apply the changes to add tokens-per-second display to my Hermes status bar. Back up the original files first, then restart Hermes when done.
+
+Your agent will:
+1. Clone the repo or read the patch files
+2. Find `run_agent.py` and `cli.py` in your Hermes installation
+3. Apply all 8 changes (4 per file)
+4. Restart Hermes
+
+---
+
+### Option 2: Manual Installation
+
+#### Step 1: Backup Original Files
 
 ```bash
 cp run_agent.py run_agent.py.bak
 cp cli.py cli.py.bak
 ```
 
-### Step 2: Apply Changes
+#### Step 2: Apply Changes
 
-#### `run_agent.py` — 4 changes
+##### `run_agent.py` — 4 changes
 
 **Change 1** — `__init__` (around line 1554): Add tracking fields
 ```python
@@ -63,7 +82,7 @@ else:
     self._last_tokens_per_second = 0.0
 ```
 
-#### `cli.py` — 4 changes
+##### `cli.py` — 4 changes
 
 **Change 1** — `_get_status_bar_snapshot()` (around line 1922): Add snapshot field
 ```python
@@ -91,18 +110,20 @@ if tps > 0:
     frags.append(("class:status-bar-dim", f"{tps:.1f} t/s"))
 ```
 
-### Step 3: Restart Hermes
+#### Step 3: Restart Hermes
 
 ```bash
 # Restart your Hermes Agent
 hermes
 ```
 
-### Step 4: Verify
+#### Step 4: Verify
 
 1. Send a message to Hermes
 2. Watch the status bar — you should see `XX.X t/s` at the end
 3. If terminal width < 76, the t/s display will be hidden (by design)
+
+---
 
 ## Troubleshooting
 
