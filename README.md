@@ -2,7 +2,7 @@
 
 Add real-time **tokens/sec (t/s)** display to the Hermes Agent terminal status bar.
 
-![status-bar-example](https://img.shields.io/badge/status%20bar-15.2%20t%2Fs-green)
+![status-bar-example](status-bar-example.jpg)
 
 ## What This Does
 
