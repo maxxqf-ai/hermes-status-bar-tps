@@ -1,0 +1,24 @@
+# cli.py patches
+# Apply these 4 changes to display tokens-per-second in status bar
+
+## Change 1: _get_status_bar_snapshot() — Add snapshot field (~line 1922)
+# Add to the snapshot dict:
++        "last_tokens_per_second": 0.0,
+
+## Change 2: _get_status_bar_snapshot() — Read from agent (~line 1936)
+# After getting model name:
++        snapshot["last_tokens_per_second"] = getattr(agent, "_last_tokens_per_second", 0.0) or 0.0
+
+## Change 3: _build_status_bar_text() — Add text display (~line 2086)
+# In the parts.append section, before the final duration:
++        tps = snapshot.get("last_tokens_per_second", 0.0)
++        if tps > 0:
++            parts.append(f"{tps:.1f} t/s")
+
+## Change 4: _get_status_bar_fragments() — Add rich text (~line 2149)
+# Add before the final duration fragment:
++        # Token generation speed (last call)
++        tps = snapshot.get("last_tokens_per_second", 0.0)
++        if tps > 0:
++            frags.append(("class:status-bar-dim", " │ "))
++            frags.append(("class:status-bar-dim", f"{tps:.1f} t/s"))

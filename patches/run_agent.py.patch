@@ -1,0 +1,25 @@
+# run_agent.py patches
+# Apply these 4 changes to add tokens-per-second tracking
+
+## Change 1: __init__ — Add tracking fields (~line 1554)
+# Add after existing field initializations:
++        # Token generation speed tracking
++        self._last_api_duration = 0.0
++        self._last_tokens_per_second = 0.0
+
+## Change 2: reset_session_state() — Initialize fields (~line 1659)
+# Add at the end of the reset function:
++        self._last_api_duration = 0.0
++        self._last_tokens_per_second = 0.0
+
+## Change 3: After API call completes — Save duration (~line 8896)
+# After "api_duration = time.time() - api_start":
++        self._last_api_duration = api_duration
+
+## Change 4: After getting completion_tokens — Compute t/s (~line 9323)
+# After completion_tokens is available:
++        # Track per-call token generation speed
++        if self._last_api_duration > 0 and completion_tokens > 0:
++            self._last_tokens_per_second = completion_tokens / self._last_api_duration
++        else:
++            self._last_tokens_per_second = 0.0
